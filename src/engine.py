@@ -22,8 +22,8 @@ from datetime import datetime, timedelta
 import requests
 from PIL import Image
 
-from prompts import PROMPT_OCR, PASS2_PROMPTS, format_ocr_for_prompt
-from utils import (
+from src.prompts import PROMPT_OCR, PASS2_PROMPTS, format_ocr_for_prompt
+from src.utils import (
     parse_date,
     calculate_theoretical_growth,
     calculate_dynamic_expiry,

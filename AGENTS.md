@@ -50,14 +50,22 @@ HF Spaces (Gradio)                 Modal (GPU)
 ## File Architecture
 
 ```
-app.py              # Gradio Blocks UI — main entry point
+app.py              # Gradio Blocks UI — main entry point (HF Spaces)
 backend.py          # Modal deployment: vLLM + MiniCPM-V 2.6 INT4 on L4 GPU
-engine.py           # HTTPS client that calls Modal endpoint (two-pass pipeline)
-prompts.py          # VLM prompt templates with OCR context injection
-utils.py            # Date parsing, chemical reference DB, spoilage scoring
-visualization.py    # Plotly charts: chemical bar, timeline, gauge, radar
+src/
+├── __init__.py
+├── engine.py       # HTTPS client that calls Modal endpoint (two-pass pipeline)
+├── prompts.py      # VLM prompt templates with OCR context injection
+├── utils.py        # Date parsing, chemical reference DB, spoilage scoring
+└── visualization.py # Plotly charts: chemical bar, timeline, gauge, radar
+tests/
+├── __init__.py
+├── test_endpoint.py    # Modal endpoint connectivity test
+├── test_improvements.py # OpenBMB optimization tests
+└── test_pipeline.py    # Full pipeline integration test
 requirements.txt    # Lightweight: requests, gradio, plotly, pandas, etc.
 README.md           # HF Spaces frontmatter (already configured)
+AGENTS.md           # This file
 agent_trace/        # Published trace for Sharing is Caring badge
 ```
 

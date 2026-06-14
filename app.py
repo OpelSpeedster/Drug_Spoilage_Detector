@@ -18,15 +18,15 @@ load_dotenv()
 import gradio as gr
 from PIL import Image
 
-from engine import analyze_image
-from utils import (
+from src.engine import analyze_image
+from src.utils import (
     parse_date,
     calculate_spoilage_score,
     get_spoilage_verdict,
     get_verdict_color,
     enrich_chemicals,
 )
-from visualization import (
+from src.visualization import (
     create_chemical_bar_chart,
     create_spoilage_timeline,
     create_bacteria_gauge,

@@ -10,7 +10,7 @@ Four charts:
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from datetime import datetime, timedelta
-from utils import parse_quantity
+from src.utils import parse_quantity
 
 
 RISK_COLORS = {
