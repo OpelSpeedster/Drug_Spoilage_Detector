@@ -7,8 +7,6 @@ sdk: gradio
 sdk_version: 6.17.3
 python_version: '3.13'
 app_file: app.py
-
-
 pinned: false
 ---
 
@@ -21,9 +19,11 @@ Detects medicine spoilage from images of syrup bottles and drug packaging using 
 1. **Extracts medicine info** — name, manufacturer, dates, ingredients, batch number
 2. **Detects visual spoilage** — discoloration, cloudiness, sediment, seal damage (with suspension context rule)
 3. **Estimates bacteria growth** — 0-100 scale based on visual cues and preservative analysis
-4. **Lists chemical composition** — ingredients with risk levels
-5. **Compares dates** — static expiry vs predicted spoilage date
-6. **Visualizes everything** — chemical bar chart, timeline, bacteria gauge, risk radar
+4. **Lists chemical composition** — ingredients with quantities and risk levels
+5. **Two-mode date comparison:**
+   - **Mode 1 (dates found):** Static expiry as primary, visual estimate as secondary warning
+   - **Mode 2 (no dates):** Visual spoilage score as primary estimate (for shopkeeper cut strips)
+6. **Visualizes everything** — chemical bar chart, expiry timeline, bacteria gauge, growth curve, color degradation, risk radar
 
 ## Tech Stack
 
@@ -31,7 +31,20 @@ Detects medicine spoilage from images of syrup bottles and drug packaging using 
 - **Frontend:** Gradio 6.17.3 on HuggingFace Spaces
 - **Backend:** Modal serverless GPU (L4) with auto-scaling
 - **Charts:** Plotly (interactive)
-- **Image Cropping:** `gr.ImageEditor` for label-focused analysis (reduces visual tokens)
+- **Image Preprocessing:** Contrast enhancement + sharpening for medicine labels
+
+## VLM Pipeline
+
+Two-pass architecture with parallel execution:
+
+1. **Pass 1 — OCR:** Extract all visible text from medicine packaging
+2. **Pass 2 — Analysis:** Four parallel VLM calls using OCR context:
+   - Info extraction (name, dates, ingredients)
+   - Spoilage assessment (visual indicators)
+   - Bacteria risk estimate
+   - Chemical composition
+
+Python fallback calculations for bacteria growth curve, color degradation timeline, and dynamic expiry estimation.
 
 ## Built for
 
