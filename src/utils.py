@@ -126,7 +126,7 @@ CHEMICAL_DB = {
     "bibhitaki": {"category": "herbal_ingredient", "risk_level": "safe"},
     "terminalia_bellirica": {"category": "herbal_ingredient", "risk_level": "safe"},
     "viraki": {"category": "herbal_ingredient", "risk_level": "safe"},
-    " Piper_longum": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "piper_longum": {"category": "herbal_ingredient", "risk_level": "safe"},
     "pippali": {"category": "herbal_ingredient", "risk_level": "safe"},
     "ginger": {"category": "herbal_ingredient", "risk_level": "safe"},
     "zingiber_officinale": {"category": "herbal_ingredient", "risk_level": "safe"},
