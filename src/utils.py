@@ -98,6 +98,116 @@ CHEMICAL_DB = {
     "vanilla_flavor": {"category": "flavoring", "risk_level": "safe"},
     "peppermint_oil": {"category": "flavoring", "risk_level": "safe"},
     "mint": {"category": "flavoring", "risk_level": "safe"},
+    # Ayurvedic / Herbal ingredients
+    "ashwagandha": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "withania_somnifera": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "tulsi": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "holy_basil": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "ocimum_tenuiflorum": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "turmeric": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "curcuma_longa": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "curcumin": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "brahmi": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "bacopa_monnieri": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "amla": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "emblica_officinalis": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "giloy": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "guduchi": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "tinospora_cordifolia": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "neem": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "azadirachta_indica": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "shatavari": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "asparagus_racemosus": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "mulethi": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "licorice": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "glycyrrhiza": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "haritaki": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "terminalia_chebula": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "bibhitaki": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "terminalia_bellirica": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "viraki": {"category": "herbal_ingredient", "risk_level": "safe"},
+    " Piper_longum": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "pippali": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "ginger": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "zingiber_officinale": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "black_pepper": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "piper_nigrum": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "fenugreek": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "methi": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "trigonella_foenum": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "cardamom": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "elaichi": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "elettaria_cardamomum": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "cinnamon": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "dalchini": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "cinnamomum": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "cloves": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "laung": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "syzygium_aromaticum": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "ajwain": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "carom_seeds": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "trachyspermum_ammi": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "cumin": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "jeera": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "cuminum_cyminum": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "coriander": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "dhania": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "coriandrum_sativum": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "guggulu": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "commiphora_mukul": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "boswellia": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "shallaki": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "gudmar": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "gymnema_sylvestre": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "karela": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "bitter_gourd": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "momordica_charantia": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "kutaja": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "holarrhena_antidysenterica": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "musta": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "cyperus_rotundus": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "bilva": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "bael": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "aegle_marmelos": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "udumbara": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "ficus_racemosa": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "kushtha": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "sarsaparilla": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "hemidesmus_indicus": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "anantmool": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "sariva": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "印度人参": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "罗勒": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "姜黄": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "假马齿苋": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "余甘子": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "心叶青牛胆": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "印楝": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "天门冬": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "甘草": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "诃子": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "毗黎勒": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "菴摩勒": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "荜茇": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "生姜": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "黑胡椒": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "胡芦巴": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "小豆蔻": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "肉桂": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "丁香": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "孜然": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "芫荽": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "没药": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "乳香": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "匙羹藤": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "苦瓜": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "止泻木": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "莎草": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "木苹果": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "榕树": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "菝葜": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "印度产蛇根木": {"category": "herbal_ingredient", "risk_level": "safe"},
+    "蛇根草": {"category": "herbal_ingredient", "risk_level": "safe"},
 }
 
 
@@ -249,19 +359,14 @@ def enrich_chemicals(vlm_chemicals: list[dict]) -> list[dict]:
 
 
 def parse_quantity(qty_str) -> float:
-    """Extract numeric value from quantity string like '5mg', '2.5ml', '100mcg', '.5ml'.
+    """Extract numeric value from quantity string like '5mg', '2.5ml', '100mcg'.
     
     Returns the numeric value for chart bar widths, or 1.0 as fallback.
     """
-    if not qty_str or str(qty_str).strip().lower() in ("null", "none", ""):
+    if not qty_str:
         return 1.0
-    match = re.search(r'(\d+(?:\.\d+)?|\.\d+)', str(qty_str))
-    if match:
-        try:
-            return float(match.group(1))
-        except (ValueError, TypeError):
-            return 1.0
-    return 1.0
+    match = re.search(r'([\d.]+)', str(qty_str))
+    return float(match.group(1)) if match else 1.0
 
 
 # --- Python Fallback Calculations ---

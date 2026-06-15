@@ -100,7 +100,14 @@ Do NOT assume packaging damage if the seal appears intact.
 PROMPT_CHEMICALS = """Look at this medicine image AND the OCR text below. List all chemical ingredients with quantities.
 
 Return ONLY valid JSON:
-{{"chemicals": [{{"name": "chemical name", "quantity": "amount with unit (e.g. 5mg, 2.5ml, 100mcg) or null", "category": "active_ingredient|preservative|solvent|other", "risk_level": "safe|caution|danger"}}]}}
+{{"chemicals": [{{"name": "chemical name", "quantity": "amount with unit (e.g. 5mg, 2.5ml, 100mcg) or null", "category": "active_ingredient|preservative|solvent|herbal_ingredient|other", "risk_level": "safe|caution|danger"}}]}}
+
+IMPORTANT RULES:
+- For herbal/Ayurvedic ingredients (turmeric, ashwagandha, tulsi, brahmi, amla, neem, guduchi, shatavari, mulethi, etc.), ALWAYS set risk_level to "safe" — these are traditional medicines with long safe usage history.
+- For standard pharmaceutical ingredients that are commonly used and well-tolerated (paracetamol, ibuprofen, cetirizine, etc.), set risk_level to "safe".
+- Only set risk_level to "caution" for ingredients with known side effects or drug interactions.
+- Only set risk_level to "danger" for ingredients with serious health risks.
+- Do NOT flag ingredients as dangerous just because you don't recognize them — use "safe" as default.
 
 If OCR text is incomplete, read directly from the image labels.
 

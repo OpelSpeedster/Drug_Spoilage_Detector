@@ -243,7 +243,7 @@ def extract_drug_outputs(result, drug_name="Medicine") -> list:
         adjustment_factors=adjustment_factors,
     )
 
-    risk_map = {"safe": 10, "caution": 50, "danger": 90, "unknown": 50}
+    risk_map = {"safe": 10, "caution": 50, "danger": 90, "unknown": 20}
     avg_chemical_risk = (
         sum(risk_map.get(c.get("risk_level", "unknown"), 50) for c in chemicals) / len(chemicals)
         if chemicals else 0
