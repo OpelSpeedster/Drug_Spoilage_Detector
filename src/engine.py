@@ -5,7 +5,7 @@ Architecture:
   Pass 2 — Structured analysis: Use OCR text for 4 short prompts.
   Fallback — Python calculations for bacteria growth, color, dynamic expiry.
 
-Retry mechanism: Up to 7 retries with progressive prompt simplification.
+Retry mechanism: Up to 3 retries with progressive prompt simplification.
 """
 
 import base64
@@ -22,7 +22,7 @@ from datetime import datetime, timedelta
 import requests
 from PIL import Image
 
-from src.prompts import PROMPT_OCR, PROMPT_DETECT_DRUGS, PASS2_PROMPTS, format_ocr_for_prompt
+from src.prompts import PROMPT_OCR, PASS2_PROMPTS, format_ocr_for_prompt
 from src.utils import (
     parse_date,
     calculate_theoretical_growth,
@@ -36,50 +36,6 @@ MODAL_ENDPOINT_URL = os.environ.get(
 )
 
 MAX_RETRIES = 3
-
-
-def detect_drugs(images: list) -> dict:
-    """Detect distinct medicines from uploaded images.
-    
-    Uses a single VLM call to identify how many different medicines
-    are shown and which photos belong to each.
-    
-    Returns: {"drug_count": N, "drugs": [{"name": str, "photo_indices": [int]}]}
-    Falls back to {"drug_count": 1, "drugs": [{"name": "Medicine", "photo_indices": [all]}]}
-    """
-    if not images:
-        return {"drug_count": 0, "drugs": []}
-
-    if len(images) == 1:
-        return {"drug_count": 1, "drugs": [{"name": "Medicine", "photo_indices": [1]}]}
-
-    try:
-        raw = _run_prompt_with_retry(images, PROMPT_DETECT_DRUGS)
-        parsed = _extract_json(raw)
-
-        if isinstance(parsed, dict) and "drug_count" in parsed:
-            drug_count = min(parsed["drug_count"], 3)  # Cap at 3 drugs
-            drugs = parsed.get("drugs", [])
-
-            # Validate and clean up
-            validated_drugs = []
-            for drug in drugs[:drug_count]:
-                name = drug.get("name", "Unknown Medicine")
-                indices = drug.get("photo_indices", [])
-                # Ensure indices are valid (1-based, within range)
-                valid_indices = [i for i in indices if 1 <= i <= len(images)]
-                if not valid_indices:
-                    valid_indices = [1]  # Fallback to first image
-                validated_drugs.append({"name": name, "photo_indices": valid_indices})
-
-            if validated_drugs:
-                return {"drug_count": len(validated_drugs), "drugs": validated_drugs}
-
-    except Exception:
-        pass
-
-    # Fallback: treat all images as one medicine
-    return {"drug_count": 1, "drugs": [{"name": "Medicine", "photo_indices": list(range(1, len(images) + 1))}]}
 
 
 @dataclass

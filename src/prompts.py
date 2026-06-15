@@ -118,17 +118,3 @@ PASS2_PROMPTS = {
     "chemicals": PROMPT_CHEMICALS,
 }
 
-
-# --- Drug Detection (Pre-analysis) ---
-
-PROMPT_DETECT_DRUGS = """Look at these medicine photos. Identify how many DISTINCT medicines are shown.
-
-Each photo is numbered starting from 1. Group photos by the medicine they show.
-If multiple photos show the same medicine (different angles), group them together.
-
-Return ONLY valid JSON:
-{{"drug_count": 2, "drugs": [{{"name": "medicine name", "photo_indices": [1, 2]}}, {{"name": "other medicine", "photo_indices": [3, 4]}}]}}
-
-If you cannot determine distinct medicines, treat all photos as one medicine.
-If only one medicine is shown, return drug_count=1 with all photo_indices in one group.
-"""

@@ -1,8 +1,8 @@
 """Biochem Spoilage Detect — Main Gradio App.
 
 Detects medicine spoilage from images using MiniCPM-V 2.6 via Modal.
-Supports multi-drug detection — upload photos of multiple medicines
-and get separate analysis for each, displayed side-by-side.
+Upload photos of a medicine to detect spoilage, visualize chemical
+composition, estimate bacteria growth, and compare expiry dates.
 
 Optimized with OpenBMB best practices:
 - Image preprocessing for medicine labels
@@ -18,7 +18,7 @@ load_dotenv()
 import gradio as gr
 from PIL import Image
 
-from src.engine import analyze_image, detect_drugs
+from src.engine import analyze_image
 from src.utils import (
     parse_date,
     calculate_spoilage_score,
@@ -35,9 +35,6 @@ from src.visualization import (
     create_dynamic_expiry_comparison,
     create_risk_radar,
 )
-
-
-MAX_DRUGS = 3
 
 
 def preprocess_uploaded_images(images) -> list:
@@ -276,65 +273,24 @@ def extract_drug_outputs(result, drug_name="Medicine") -> list:
     ]
 
 
-def empty_drug_outputs(drug_name="No image uploaded") -> list:
-    """Return 11 empty/placeholder outputs for an inactive drug slot."""
-    placeholder = f"### {drug_name}\n\nUpload photos and click Analyze to see results."
-    empty_chart = gr.update()
-    return [
-        gr.Markdown(placeholder),
-        gr.Markdown(""),
-        gr.Markdown(""),
-        empty_chart, empty_chart, empty_chart,
-        empty_chart, empty_chart, empty_chart,
-        empty_chart, gr.Markdown(""),
-    ]
-
-
 def process_images(images, user_text: str):
-    """Main analysis pipeline — detects multiple drugs and analyzes each.
+    """Main analysis pipeline — analyzes all uploaded images as one medicine.
 
-    Returns 36 outputs: 11 per drug × 3 slots + 3 column visibility toggles.
+    Returns 11 outputs: info, verdict, date, 6 charts, radar, raw responses.
     """
-    # 36 = 11 outputs × 3 drugs + 3 visibility flags
     if not images:
-        outputs = []
-        for i in range(MAX_DRUGS):
-            outputs.extend(empty_drug_outputs(f"Drug {i+1}"))
-            outputs.append(gr.update(visible=False))
-        return outputs
+        placeholder = "### Medicine\n\nUpload photos and click Analyze to see results."
+        empty_chart = gr.update()
+        return [
+            gr.Markdown(placeholder), gr.Markdown(""), gr.Markdown(""),
+            empty_chart, empty_chart, empty_chart,
+            empty_chart, empty_chart, empty_chart,
+            empty_chart, gr.Markdown(""),
+        ]
 
     processed_images = preprocess_uploaded_images(images)
-
-    # Step 1: Detect distinct drugs
-    detection = detect_drugs(processed_images)
-    drug_count = min(detection["drug_count"], MAX_DRUGS)
-    drugs = detection["drugs"][:MAX_DRUGS]
-
-    # Step 2: Analyze each drug
-    outputs = []
-    for i in range(MAX_DRUGS):
-        if i < drug_count and drugs[i]:
-            drug = drugs[i]
-            drug_name = drug.get("name", f"Drug {i+1}")
-            photo_indices = drug.get("photo_indices", [1])
-
-            # Get images for this drug (1-based indices)
-            drug_images = []
-            for idx in photo_indices:
-                if 1 <= idx <= len(processed_images):
-                    drug_images.append(processed_images[idx - 1])
-
-            if not drug_images:
-                drug_images = processed_images  # Fallback: use all images
-
-            result = analyze_image(drug_images, user_text=user_text)
-            outputs.extend(extract_drug_outputs(result, drug_name))
-            outputs.append(gr.update(visible=True))
-        else:
-            outputs.extend(empty_drug_outputs(f"Drug {i+1}"))
-            outputs.append(gr.update(visible=False))
-
-    return outputs
+    result = analyze_image(processed_images, user_text=user_text)
+    return extract_drug_outputs(result)
 
 
 # --- Build Gradio UI ---
@@ -345,9 +301,8 @@ THEME = gr.themes.Soft(
     font=gr.themes.GoogleFont("Inter"),
 )
 
-CSS = """
-.drug-column { border-left: 3px solid #3366CC; padding-left: 12px; }
-"""
+CSS = ""
+
 
 with gr.Blocks(title="Biochem Spoilage Detect", css=CSS) as demo:
     gr.Markdown(
@@ -355,9 +310,8 @@ with gr.Blocks(title="Biochem Spoilage Detect", css=CSS) as demo:
         # Biochem Spoilage Detect
         ### Powered by MiniCPM-V 2.6 INT4 (8B params) on Modal
 
-        Upload photos of one or more medicines to detect spoilage, visualize chemical
-        composition, estimate bacteria growth, and compare expiry dates.
-        **Multiple drugs are automatically detected and analyzed separately.**
+        Upload 2-4 photos of a medicine (front, side, back, sticker) to detect spoilage,
+        visualize chemical composition, estimate bacteria growth, and compare expiry dates.
         """
     )
 
@@ -374,9 +328,8 @@ with gr.Blocks(title="Biochem Spoilage Detect", css=CSS) as demo:
             gr.Markdown(
                 """
                 **Tips for best results:**
-                - Upload 2-4 photos per medicine from different angles
+                - Upload 2-4 photos from different angles
                 - Ensure text on labels is clear and readable
-                - You can upload photos of multiple drugs — they'll be detected automatically
                 - Images are automatically optimized for analysis
                 """
             )
@@ -391,89 +344,33 @@ with gr.Blocks(title="Biochem Spoilage Detect", css=CSS) as demo:
                 size="lg",
             )
 
-    # --- Drug 1 Results ---
-    with gr.Row():
-        drug1_col = gr.Column(visible=True, elem_classes=["drug-column"])
-        with drug1_col:
-            drug1_info = gr.Markdown("### Drug 1\n\nUpload photos and click Analyze...")
-            drug1_verdict = gr.Markdown("")
-            drug1_date = gr.Markdown("")
-        drug2_col = gr.Column(visible=False, elem_classes=["drug-column"])
-        with drug2_col:
-            drug2_info = gr.Markdown("### Drug 2\n\nUpload photos and click Analyze...")
-            drug2_verdict = gr.Markdown("")
-            drug2_date = gr.Markdown("")
-        drug3_col = gr.Column(visible=False, elem_classes=["drug-column"])
-        with drug3_col:
-            drug3_info = gr.Markdown("### Drug 3\n\nUpload photos and click Analyze...")
-            drug3_verdict = gr.Markdown("")
-            drug3_date = gr.Markdown("")
+    # --- Results (single column) ---
+    info_md = gr.Markdown("### Extracted Information\n\nUpload photos and click Analyze...")
+    verdict_md = gr.Markdown("")
+    date_md = gr.Markdown("")
 
-    # --- Drug 1 Charts ---
     with gr.Row():
-        drug1_chem = gr.Plot(label="Chemical Composition")
-        drug1_timeline = gr.Plot(label="Spoilage Timeline")
+        chem_plot = gr.Plot(label="Chemical Composition")
+        timeline_plot = gr.Plot(label="Spoilage Timeline")
     with gr.Row():
-        drug1_gauge = gr.Plot(label="Bacteria Growth")
-        drug1_radar = gr.Plot(label="Risk Radar")
+        gauge_plot = gr.Plot(label="Bacteria Growth")
+        radar_plot = gr.Plot(label="Risk Radar")
     with gr.Row():
-        drug1_growth = gr.Plot(label="Bacteria Growth Curve")
-        drug1_color = gr.Plot(label="Color Degradation")
+        growth_plot = gr.Plot(label="Bacteria Growth Curve")
+        color_plot = gr.Plot(label="Color Degradation")
     with gr.Row():
-        drug1_dynamic = gr.Plot(label="Static vs Dynamic Expiry")
-
-    # --- Drug 2 Charts ---
-    with gr.Row(visible=False) as drug2_charts_row:
-        drug2_chem = gr.Plot(label="Chemical Composition")
-        drug2_timeline = gr.Plot(label="Spoilage Timeline")
-    with gr.Row(visible=False) as drug2_charts_row2:
-        drug2_gauge = gr.Plot(label="Bacteria Growth")
-        drug2_radar = gr.Plot(label="Risk Radar")
-    with gr.Row(visible=False) as drug2_charts_row3:
-        drug2_growth = gr.Plot(label="Bacteria Growth Curve")
-        drug2_color = gr.Plot(label="Color Degradation")
-    with gr.Row(visible=False) as drug2_charts_row4:
-        drug2_dynamic = gr.Plot(label="Static vs Dynamic Expiry")
-
-    # --- Drug 3 Charts ---
-    with gr.Row(visible=False) as drug3_charts_row:
-        drug3_chem = gr.Plot(label="Chemical Composition")
-        drug3_timeline = gr.Plot(label="Spoilage Timeline")
-    with gr.Row(visible=False) as drug3_charts_row2:
-        drug3_gauge = gr.Plot(label="Bacteria Growth")
-        drug3_radar = gr.Plot(label="Risk Radar")
-    with gr.Row(visible=False) as drug3_charts_row3:
-        drug3_growth = gr.Plot(label="Bacteria Growth Curve")
-        drug3_color = gr.Plot(label="Color Degradation")
-    with gr.Row(visible=False) as drug3_charts_row4:
-        drug3_dynamic = gr.Plot(label="Static vs Dynamic Expiry")
+        dynamic_plot = gr.Plot(label="Static vs Dynamic Expiry")
 
     # --- Raw Responses ---
     with gr.Accordion("Raw VLM Responses", open=False):
-        drug1_raw = gr.Markdown()
-        drug2_raw = gr.Markdown()
-        drug3_raw = gr.Markdown()
+        raw_md = gr.Markdown()
 
     # Wire up the analysis
     all_outputs = [
-        # Drug 1 (always visible)
-        drug1_info, drug1_verdict, drug1_date,
-        drug1_chem, drug1_timeline, drug1_gauge,
-        drug1_growth, drug1_color, drug1_dynamic,
-        drug1_radar, drug1_raw,
-        drug1_col,
-        # Drug 2
-        drug2_info, drug2_verdict, drug2_date,
-        drug2_chem, drug2_timeline, drug2_gauge,
-        drug2_growth, drug2_color, drug2_dynamic,
-        drug2_radar, drug2_raw,
-        drug2_col,
-        # Drug 3
-        drug3_info, drug3_verdict, drug3_date,
-        drug3_chem, drug3_timeline, drug3_gauge,
-        drug3_growth, drug3_color, drug3_dynamic,
-        drug3_radar, drug3_raw,
-        drug3_col,
+        info_md, verdict_md, date_md,
+        chem_plot, timeline_plot, gauge_plot,
+        growth_plot, color_plot, dynamic_plot,
+        radar_plot, raw_md,
     ]
 
     analyze_btn.click(
