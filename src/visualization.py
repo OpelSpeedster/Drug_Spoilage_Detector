@@ -268,7 +268,7 @@ def create_risk_radar(
     chemical_risk: float,
 ) -> go.Figure:
     """Radar/spider chart showing multi-axis risk assessment."""
-    categories = ["Visual", "Bacteria", "Date Proximity", "Chemical Risk"]
+    categories = ["Visual", "Bacteria", "Date Proximity", "Chemical Composition"]
     values = [
         max(0, min(100, visual_score)),
         max(0, min(100, bacteria_score)),
