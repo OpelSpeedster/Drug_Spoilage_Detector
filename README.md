@@ -8,6 +8,14 @@ sdk_version: 6.17.3
 python_version: '3.13'
 app_file: app.py
 pinned: false
+tags:
+  - track:backyard
+  - sponsor:openbmb
+  - sponsor:modal
+  - achievement:offgrid
+  - achievement:offbrand
+  - achievement:sharing
+  - achievement:fieldnotes
 ---
 
 # Drug Spoilage Detector
@@ -46,8 +54,10 @@ Two-pass architecture with parallel execution:
 
 Python fallback calculations for bacteria growth curve, color degradation timeline, and dynamic expiry estimation.
 
+## Links
+
+[YouTube](https://youtu.be/fyKL3cSDxDo), [LinkedIn](https://www.linkedin.com/posts/vishal-s-v_drug-spoilage-detector-a-hugging-face-space-share-7472296588283912192-hWBY/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE7ZGVEB9uZmvexoy9SwcIfLeGOes3cz2Uw)
+
 ## Built for
 
 [Build Small Hackathon](https://huggingface.co/build-small-hackathon) — Track 1: Backyard AI
-
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
