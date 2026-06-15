@@ -1,4 +1,4 @@
-# AGENTS.md — Biochem Spoilage Detect
+# AGENTS.md — Drug Spoilage Detector
 
 ## Project Context
 

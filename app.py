@@ -1,4 +1,4 @@
-"""Biochem Spoilage Detect — Main Gradio App.
+"""Drug Spoilage Detector — Main Gradio App.
 
 Detects medicine spoilage from images using MiniCPM-V 2.6 via Modal.
 Upload photos of a medicine to detect spoilage, visualize chemical
@@ -304,10 +304,10 @@ THEME = gr.themes.Soft(
 CSS = ""
 
 
-with gr.Blocks(title="Biochem Spoilage Detect", css=CSS) as demo:
+with gr.Blocks(title="Drug Spoilage Detector", css=CSS) as demo:
     gr.Markdown(
         """
-        # Biochem Spoilage Detect
+        # Drug Spoilage Detector
         ### Powered by MiniCPM-V 2.6 INT4 (8B params) on Modal
 
         Upload 2-4 photos of a medicine (front, side, back, sticker) to detect spoilage,

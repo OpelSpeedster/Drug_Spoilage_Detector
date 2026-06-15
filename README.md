@@ -1,5 +1,5 @@
 ---
-title: Biochem Spoilage Detect
+title: Drug Spoilage Detector
 emoji: 📊
 colorFrom: pink
 colorTo: blue
@@ -10,7 +10,7 @@ app_file: app.py
 pinned: false
 ---
 
-# Biochem Spoilage Detect
+# Drug Spoilage Detector
 
 Detects medicine spoilage from images of syrup bottles and drug packaging using **MiniCPM-V 2.6 INT4** (8B params, bitsandbytes quantized) served via Modal. Upload a photo, crop to the label area to reduce visual tokens, and get a full spoilage analysis.
 

@@ -1,4 +1,4 @@
-"""Modal inference backend for Biochem Spoilage Detect.
+"""Modal inference backend for Drug Spoilage Detector.
 
 Deploys MiniCPM-V 2.6 INT4 (8B params, bitsandbytes quantized) via vLLM
 with an HTTPS endpoint. The Gradio frontend calls this endpoint for VLM analysis.
