@@ -276,10 +276,11 @@ def extract_drug_outputs(result, drug_name="Medicine") -> list:
 def process_images(images, user_text: str):
     """Main analysis pipeline — analyzes all uploaded images as one medicine.
 
+    Gallery supports upload, webcam (multiple shots), and clipboard.
     Returns 11 outputs: info, verdict, date, 6 charts, radar, raw responses.
     """
     if not images:
-        placeholder = "### Medicine\n\nUpload photos and click Analyze to see results."
+        placeholder = "### Medicine\n\nUpload photos or take photos with camera, then click Analyze."
         empty_chart = gr.update()
         return [
             gr.Markdown(placeholder), gr.Markdown(""), gr.Markdown(""),
@@ -294,76 +295,180 @@ def process_images(images, user_text: str):
 
 
 # --- Build Gradio UI ---
-THEME = gr.themes.Soft(
-    primary_hue="blue",
-    secondary_hue="pink",
+THEME = gr.themes.Base(
+    primary_hue="emerald",
+    secondary_hue="blue",
     neutral_hue="slate",
     font=gr.themes.GoogleFont("Inter"),
 )
 
-CSS = ""
+CSS = """
+.header-banner {
+    background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%);
+    padding: 24px 32px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+.header-banner h1 {
+    color: white !important;
+    font-size: 1.8em !important;
+    margin: 0 !important;
+}
+.header-banner p {
+    color: rgba(255,255,255,0.85) !important;
+    margin: 4px 0 0 0 !important;
+    font-size: 0.95em !important;
+}
+.verdict-card {
+    padding: 20px 24px;
+    border-radius: 10px;
+    border-left: 5px solid;
+    margin: 12px 0;
+}
+.verdict-card .verdict-label {
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+    margin-bottom: 4px;
+}
+.verdict-card .verdict-text {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin: 0;
+}
+.verdict-card .verdict-score {
+    font-size: 0.95em;
+    margin-top: 6px;
+}
+.tip-box {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.88em;
+    line-height: 1.5;
+    color: #e2e8f0;
+    margin: 8px 0;
+}
+.tip-box strong { color: #f8fafc; }
+.tip-box ul { margin: 6px 0 0 16px; padding: 0; }
+.tip-box li { margin: 2px 0; color: #cbd5e1; }
+.analyze-btn {
+    background: linear-gradient(135deg, #059669, #0d9488) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 1.05em !important;
+    padding: 10px 0 !important;
+    border-radius: 8px !important;
+    transition: opacity 0.2s !important;
+}
+.analyze-btn:hover { opacity: 0.9 !important; }
+.chart-section { margin-top: 8px; }
+.section-header {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 20px 0 8px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e2e8f0;
+}
+gradio-container { max-width: 1200px !important; }
+footer { margin-top: 16px; }
+"""
 
+with gr.Blocks(title="Drug Spoilage Detector") as demo:
+    # --- Header Banner ---
+    gr.HTML("""
+    <div class="header-banner">
+        <h1>Drug Spoilage Detector</h1>
+        <p>Powered by MiniCPM-V 2.6 INT4 (8B params) on Modal</p>
+    </div>
+    """)
 
-with gr.Blocks(title="Drug Spoilage Detector", css=CSS) as demo:
-    gr.Markdown(
+    with gr.Sidebar(position="left", open=True):
+        gr.Markdown("## Upload Medicine")
+
+        image_input = gr.Gallery(
+            label="Medicine Photos (upload or take with camera)",
+            columns=3,
+            height=280,
+            file_types=["image"],
+            type="pil",
+            sources=["upload", "webcam", "clipboard"],
+        )
+
+        gr.HTML("""
+        <div class="tip-box">
+            <strong>Tips for best results:</strong>
+            <ul>
+                <li>Upload 2-4 photos from different angles</li>
+                <li>Ensure text on labels is clear and readable</li>
+                <li>Works with or without expiry dates</li>
+                <li>Supports Ayurvedic & herbal medicines</li>
+            </ul>
+        </div>
+        """)
+
+        user_text_input = gr.Textbox(
+            label="Additional Info (optional)",
+            placeholder="Medicine name, what you see on label, storage conditions...",
+            lines=2,
+        )
+        analyze_btn = gr.Button(
+            "Analyze",
+            variant="primary",
+            size="lg",
+            elem_classes=["analyze-btn"],
+        )
+
+    # --- Main Content ---
+    # Verdict banner
+    verdict_md = gr.Markdown("")
+
+    # Extracted info
+    info_md = gr.Markdown(
         """
-        # Drug Spoilage Detector
-        ### Powered by MiniCPM-V 2.6 INT4 (8B params) on Modal
+        ### Extracted Information
 
-        Upload 2-4 photos of a medicine (front, side, back, sticker) to detect spoilage,
-        visualize chemical composition, estimate bacteria growth, and compare expiry dates.
+        Upload photos and click **Analyze** to see medicine details.
         """
     )
 
-    with gr.Row():
-        with gr.Column(scale=1):
-            image_input = gr.Gallery(
-                label="Upload Medicine Photos (front, side, back, sticker...)",
-                columns=3,
-                height=300,
-                file_types=["image"],
-                type="pil",
-                sources=["upload", "webcam", "clipboard"],
-            )
-            gr.Markdown(
-                """
-                **Tips for best results:**
-                - Upload 2-4 photos from different angles
-                - Ensure text on labels is clear and readable
-                - Images are automatically optimized for analysis
-                """
-            )
-            user_text_input = gr.Textbox(
-                label="Additional Info (optional)",
-                placeholder="Type any details: medicine names, what you see on labels, storage conditions, etc.",
-                lines=3,
-            )
-            analyze_btn = gr.Button(
-                "Analyze Photos",
-                variant="primary",
-                size="lg",
-            )
+    # Tabs for chart groups
+    with gr.Tabs() as tabs:
+        with gr.Tab("Overview"):
+            date_md = gr.Markdown("")
 
-    # --- Results (single column) ---
-    info_md = gr.Markdown("### Extracted Information\n\nUpload photos and click Analyze...")
-    verdict_md = gr.Markdown("")
-    date_md = gr.Markdown("")
+        with gr.Tab("Chemical"):
+            chem_plot = gr.Plot(label="Chemical Composition")
 
-    with gr.Row():
-        chem_plot = gr.Plot(label="Chemical Composition")
-        timeline_plot = gr.Plot(label="Spoilage Timeline")
-    with gr.Row():
-        gauge_plot = gr.Plot(label="Bacteria Growth")
-        radar_plot = gr.Plot(label="Risk Radar")
-    with gr.Row():
-        growth_plot = gr.Plot(label="Bacteria Growth Curve")
-        color_plot = gr.Plot(label="Color Degradation")
-    with gr.Row():
-        dynamic_plot = gr.Plot(label="Static vs Dynamic Expiry")
+        with gr.Tab("Bacteria"):
+            with gr.Row():
+                gauge_plot = gr.Plot(label="Bacteria Growth")
+                radar_plot = gr.Plot(label="Risk Assessment")
+            growth_plot = gr.Plot(label="Bacteria Growth Curve")
 
-    # --- Raw Responses ---
+        with gr.Tab("Visual"):
+            timeline_plot = gr.Plot(label="Spoilage Timeline")
+            color_plot = gr.Plot(label="Color Degradation")
+
+        with gr.Tab("Expiry"):
+            dynamic_plot = gr.Plot(label="Static vs Dynamic Expiry")
+
+    # Raw Responses
     with gr.Accordion("Raw VLM Responses", open=False):
         raw_md = gr.Markdown()
+
+    # --- Footer ---
+    gr.Markdown(
+        """
+        ---
+        Built for [Build Small Hackathon](https://huggingface.co/build-small-hackathon) — Track 1: Backyard AI.
+        Model: `openbmb/MiniCPM-V-2_6-int4` (8B params) served via Modal. Inference runs on Modal GPUs.
+        """
+    )
 
     # Wire up the analysis
     all_outputs = [
@@ -377,14 +482,6 @@ with gr.Blocks(title="Drug Spoilage Detector", css=CSS) as demo:
         fn=process_images,
         inputs=[image_input, user_text_input],
         outputs=all_outputs,
-    )
-
-    gr.Markdown(
-        """
-        ---
-        Built for [Build Small Hackathon](https://huggingface.co/build-small-hackathon) — Track 1: Backyard AI.
-        Model: `openbmb/MiniCPM-V-2_6-int4` (8B params) served via Modal. Inference runs on Modal GPUs.
-        """
     )
 
 if __name__ == "__main__":
