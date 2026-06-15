@@ -249,14 +249,19 @@ def enrich_chemicals(vlm_chemicals: list[dict]) -> list[dict]:
 
 
 def parse_quantity(qty_str) -> float:
-    """Extract numeric value from quantity string like '5mg', '2.5ml', '100mcg'.
+    """Extract numeric value from quantity string like '5mg', '2.5ml', '100mcg', '.5ml'.
     
     Returns the numeric value for chart bar widths, or 1.0 as fallback.
     """
-    if not qty_str:
+    if not qty_str or str(qty_str).strip().lower() in ("null", "none", ""):
         return 1.0
-    match = re.search(r'([\d.]+)', str(qty_str))
-    return float(match.group(1)) if match else 1.0
+    match = re.search(r'(\d+(?:\.\d+)?|\.\d+)', str(qty_str))
+    if match:
+        try:
+            return float(match.group(1))
+        except (ValueError, TypeError):
+            return 1.0
+    return 1.0
 
 
 # --- Python Fallback Calculations ---
