@@ -380,6 +380,7 @@ def analyze_image(images: list, user_text: str = "") -> AnalysisResult:
         ingredients = result.medicine_info.get("ingredients", [])
         preservatives = result.bacteria_estimate.get("preservatives_found", [])
         spoilage_level = result.spoilage_assessment.get("spoilage_level", 0)
+        vlm_bacteria_level = result.bacteria_estimate.get("growth_level", 0)
         days_since_mfg = _calculate_days_since_mfg(result.medicine_info)
         shelf_life = _calculate_shelf_life(result.medicine_info)
 
@@ -389,6 +390,7 @@ def analyze_image(images: list, user_text: str = "") -> AnalysisResult:
             shelf_life_days=shelf_life,
             days_since_mfg=days_since_mfg,
             spoilage_level=spoilage_level,
+            vlm_bacteria_level=vlm_bacteria_level,
         )
         result.raw_responses["python_bacteria_growth"] = json.dumps(
             result.bacteria_growth_curve, indent=2

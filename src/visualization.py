@@ -336,7 +336,13 @@ def create_bacteria_growth_curve(
     current_day: int,
     critical_threshold_day: int,
 ) -> go.Figure:
-    """Line chart showing bacteria growth over time with critical threshold."""
+    """Line chart showing bacteria growth over time with critical threshold.
+    
+    Plots:
+    - Theoretical growth curve (Python logistic model, calibrated by VLM)
+    - VLM's visual estimate as a dot at current day
+    - Critical threshold line
+    """
     if not growth_curve or "growth_curve" not in growth_curve:
         fig = go.Figure()
         fig.add_annotation(
@@ -360,16 +366,26 @@ def create_bacteria_growth_curve(
 
     fig = go.Figure()
 
-    # Growth curve
+    # Theoretical growth curve
     fig.add_trace(go.Scatter(
         x=days,
         y=values,
         mode="lines+markers",
-        name="Bacteria Growth",
+        name="Theoretical Growth",
         line=dict(color="#FF6B6B", width=3),
         marker=dict(size=8, color="#FF6B6B"),
         fill="tozeroy",
         fillcolor="rgba(255, 107, 107, 0.2)",
+    ))
+
+    # VLM's visual estimate as a dot at current day
+    vlm_level = growth_curve.get("vlm_bacteria_level", 0)
+    fig.add_trace(go.Scatter(
+        x=[current_day],
+        y=[vlm_level],
+        mode="markers",
+        name="VLM Visual Estimate",
+        marker=dict(size=14, color="#FFD700", symbol="diamond", line=dict(color="white", width=2)),
     ))
 
     # Critical threshold line

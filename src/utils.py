@@ -345,10 +345,14 @@ def calculate_theoretical_growth(
     shelf_life_days: int,
     days_since_mfg: int,
     spoilage_level: int,
+    vlm_bacteria_level: int = 0,
 ) -> dict:
     """Calculate theoretical bacteria growth using logistic model.
     
     P(t) = K / (1 + ((K - P0) / P0) * e^(-rt))
+    
+    vlm_bacteria_level: VLM's visual contamination estimate (0-100),
+                        used to calibrate the growth curve.
     """
     P0 = 10  # Initial CFU
     K = 10000  # Carrying capacity
@@ -366,6 +370,16 @@ def calculate_theoretical_growth(
         r *= 0.3
     else:
         r *= 1.5
+
+    # VLM bacteria estimate calibrates the curve:
+    # High VLM estimate → increase growth rate (contamination likely present)
+    # Low VLM estimate → decrease growth rate (clean environment)
+    if vlm_bacteria_level > 60:
+        r *= 2.0
+    elif vlm_bacteria_level > 30:
+        r *= 1.5
+    elif vlm_bacteria_level < 10:
+        r *= 0.5
 
     # High spoilage means contamination already present
     if spoilage_level > 50:
@@ -392,6 +406,7 @@ def calculate_theoretical_growth(
 
     return {
         "current_growth_level": current_growth_pct,
+        "vlm_bacteria_level": vlm_bacteria_level,
         "growth_curve": growth_curve,
         "shelf_life_days": shelf_life_days,
         "critical_threshold_day": critical_day,
